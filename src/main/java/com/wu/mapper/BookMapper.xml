@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wu.mapper.BookMapper">
+    <select id="selectNewBooks" resultType="Book">
+        SELECT * FROM book where book_status !=3 order by book_uploadTime DESC
+    </select>
+
+    <select id="findById" resultType="Book">
+        SELECT * FROM book where book_id = #{id}
+    </select>
+
+    <select id="searchBooks" parameterType="Book" resultType="Book">
+        SELECT * FROM  book where book_status !=3
+          <if test="bookName != null"> and book_name like concat("%",#{bookName},"%") </if>
+          <if test="bookPress != null"> and book_press like concat("%",#{bookPress},"%") </if>
+          <if test="bookAuthor != null"> and book_author like concat("%",#{bookAuthor},"%") </if>
+         order by book_status
+    </select>
+
+    <select id="selectBorrowed" parameterType="Book" resultType="Book">
+        SELECT * FROM book where book_borrower =#{bookBorrower} and book_status= 1
+        <if test="bookName != null"> and book_name like concat("%",#{bookName},"%") </if>
+        <if test="bookPress != null"> and book_press like concat("%",#{bookPress},"%") </if>
+        <if test="bookAuthor != null"> and book_author like concat("%",#{bookAuthor},"%") </if>
+        or book_status =2
+        <if test="bookName != null"> and book_name like concat("%",#{bookName},"%") </if>
+        <if test="bookPress != null"> and book_press like concat("%",#{bookPress},"%") </if>
+        <if test="bookAuthor != null"> and book_author like concat("%",#{bookAuthor},"%") </if>
+        order by book_borrowTime
+    </select>
+
+    <select id="selectMyBorrowed" parameterType="Book" resultType="Book">
+        SELECT * FROM book where book_borrower = #{bookBorrower} and
+            book_status in(1,2)
+            <if test="bookName != null"> and book_name like concat("%",#{bookName},"%") </if>
+            <if test="bookPress != null"> and book_press like concat("%",#{bookPress},"%") </if>
+            <if test="bookAuthor != null"> and book_author like concat("%",#{bookAuthor},"%") </if>
+            order by book_borrowTime
+    </select>
+
+
+
+    <update id="editBook" parameterType="Book" >
+        UPDATE book
+        <trim prefix="set" suffixOverrides=",">
+            <if test="bookName != null">
+                book_name = #{bookName},
+            </if>
+            <if test="bookIsbn != null">
+                book_isbn = #{bookIsbn},
+            </if>
+            <if test="bookPress != null">
+                book_press = #{bookPress},
+            </if>
+            <if test="bookAuthor != null">
+                book_author = #{bookAuthor},
+            </if>
+            <if test="bookPagination != null">
+                book_pagination = #{bookPagination},
+            </if>
+            <if test="bookPrice != null">
+                book_price = #{bookPrice},
+            </if>
+            <if test="bookUploadTime != null">
+                book_uploadTime = #{bookUploadTime},
+            </if>
+            <if test="bookStatus != null">
+                book_status = #{bookStatus},
+            </if>
+            <if test="bookBorrower != null">
+                book_borrower = #{bookBorrower},
+            </if>
+            <if test="bookBorrowTime != null">
+                book_borrowTime = #{bookBorrowTime},
+            </if>
+            <if test="bookReturnTime != null">
+                book_returnTime = #{bookReturnTime},
+            </if>
+        </trim>
+        where book_id = #{bookId}
+    </update>
+
+    <update id="editBook2" parameterType="Book" >
+        UPDATE book
+        <trim prefix="set" suffixOverrides=",">
+            <if test="bookName != null">
+                book_name = #{bookName},
+            </if>
+            <if test="bookIsbn != null">
+                book_isbn = #{bookIsbn},
+            </if>
+            <if test="bookPress != null">
+                book_press = #{bookPress},
+            </if>
+            <if test="bookAuthor != null">
+                book_author = #{bookAuthor},
+            </if>
+            <if test="bookPagination != null">
+                book_pagination = #{bookPagination},
+            </if>
+            <if test="bookPrice != null">
+                book_price = #{bookPrice},
+            </if>
+            <if test="bookUploadTime != null">
+                book_uploadTime = #{bookUploadTime},
+            </if>
+            <if test="bookStatus != null">
+                book_status = #{bookStatus},
+            </if>
+            <if test="bookBorrower != null">
+                book_borrower = #{bookBorrower},
+            </if>
+            <if test="bookBorrowTime == null">
+                book_borrowTime = #{bookBorrowTime},
+            </if>
+            <if test="bookReturnTime == null">
+                book_returnTime = #{bookReturnTime},
+            </if>
+        </trim>
+        where book_id = #{bookId}
+    </update>
+
+    <insert id="addBook" parameterType="Book">
+        INSERT INTO book(book_id,book_name,book_isbn,book_press,book_author,
+                         book_pagination,book_price,book_uploadTime,book_status,
+                         book_borrower,book_borrowTime,book_returnTime) values(
+                         #{bookId},#{bookName},#{bookIsbn},#{bookPress},#{bookAuthor},
+                        #{bookPagination},#{bookPrice},#{bookUploadTime},#{bookStatus},
+                        #{bookBorrower},#{bookBorrowTime},#{bookReturnTime} )
+    </insert>
+</mapper>

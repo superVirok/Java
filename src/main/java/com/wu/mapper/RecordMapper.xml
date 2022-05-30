@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wu.mapper.RecordMapper">
+    <insert id="addRecord" parameterType="Record">
+        INSERT INTO record(record_id,record_bookName,record_bookIsbn,record_borrower,
+                           record_borrowTime,record_remandTime) values(#{recordId},
+                           #{recordBookName},#{recordBookIsbn},#{recordBorrower},
+                           #{recordBorrowTime},#{recordRemandTime} )
+    </insert>
+
+    <select id="searchRecords" parameterType="Record" resultType="Record">
+        SELECT * FROM record where 1=1
+        <if test="recordBorrower != null">
+            and record_borrower like concat("%",#{recordBorrower},"%")</if>
+        <if test="recordBookName != null">
+            and record_bookName like concat("%",#{recordBookName},"%")</if>
+        order by record_remandTime desc
+    </select>
+</mapper>
